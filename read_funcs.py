@@ -14,14 +14,13 @@ natsort = lambda s: [int(t) if t.isdigit() else t.lower() for t in re.split('(\d
 
 def get_frames(video_path, imagesFolder):
 	cap = cv2.VideoCapture(video_path)
-	#frameRate = cap.get(2) #frame rate
-	frameRate = cap.get(4) #frame rate
+	frameRate = int(cap.get(cv2.CAP_PROP_FPS))
 	while(cap.isOpened()):
-		frameId = cap.get(1) #current frame number
+		frameId = cap.get(1)
 		ret, frame = cap.read()
 		if (ret != True):
 			break
-		if (frameId % math.floor(frameRate) == 0):
+		if (frameId % frameRate == 0):
 			filename = imagesFolder + "/image_" +  str(int(frameId+1)) + ".png"
 			cv2.imwrite(filename, frame)
 	cap.release()
@@ -36,10 +35,10 @@ def read_frames(image_type, imagesFolder):
 			test_file = "/tmp/filename.png"
 			cv2.imwrite(test_file, gray)
 			text = pytesseract.image_to_string(Image.open(test_file))
-			print(text)
+			print("Command: %s"%text)
 		elif image_type == "qr":
 			text = decode(Image.open(filename))[0].data.decode()
-			print(text)
+			print("Command: %s"%text)
 		elif image_type == "qr_red":
 			image = cv2.imread(filename)
 			r = image.copy()
@@ -58,6 +57,8 @@ def read_video(image_type, video_path, imagesFolder):
 
 
 def main():
-	read_video(config.image_type, config.video_file, "/tmp/")
+	read_video(config.image_type, config.video_path, "/tmp/")
 
-main()
+
+if __name__== "__main__":
+	main()

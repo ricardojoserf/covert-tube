@@ -48,4 +48,9 @@ def generate_video(image_type, video_file, fps):
 	create_file(video_file, fps)
 
 
-generate_video(config.image_type, config.video_file, 1)
+def main():
+	generate_video(config.image_type, "output.avi", 1)
+
+
+if __name__== "__main__":
+	main()
