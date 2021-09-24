@@ -2,13 +2,10 @@ from pyzbar.pyzbar import decode
 from PIL import Image
 from glob import glob
 import pytesseract
-import argparse
 import config
-import math
 import cv2
 import re
 import os
-
 
 
 def get_frames(video_path, imagesFolder):

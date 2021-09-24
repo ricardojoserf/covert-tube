@@ -8,8 +8,6 @@ import urllib
 import config
 import json
 import time
-import math
-import cv2
 import os
 
 
@@ -38,6 +36,9 @@ def download_video(video_url, downloaded_video_path):
 	ydl_opts = {'outtmpl': downloaded_video_path}
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 		ydl.download([video_url])
+	'''
+	os.system("wget "+video_url+" -O "+downloaded_video_path)
+	'''
 
 
 def analyze(downloaded_video_path):
@@ -68,7 +69,7 @@ def wait_for_upload(original_video_url, api_key, channel_id, delay_seconds, down
 			original_video_url = video_url
 		else:
 			now = datetime.datetime.now()
-			print("[%02d:%02d] No new video uploaded.Waiting %s seconds..."%(now.hour,now.minute,delay_seconds))
+			print("[%02d:%02d] No new video uploaded. Waiting %s seconds..."%(now.hour,now.minute,delay_seconds))
 
 
 def main():

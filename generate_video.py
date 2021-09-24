@@ -11,7 +11,7 @@ import os
 def generate_frames(image_type):
 	images_counter = 0
 	while True:
-		cmd_ = input("Enter command for the image or 'exit' to start generating the video: ")
+		cmd_ = input("Enter command or 'exit' to generate video: ")
 		images_counter += 1
 		if cmd_ != "exit":
 			if image_type == "cleartext":
@@ -21,7 +21,7 @@ def generate_frames(image_type):
 				canvas.text((16, 16), cmd_, font=font, fill='#000000')
 				img.save(config.temp_folder+"image_"+str(images_counter)+".png")
 			elif image_type == "qr":
-				qrcode = pyqrcode.create(cmd_)
+				qrcode = pyqrcode.create(cmd_,version=10)
 				qrcode.png(config.temp_folder+"image_"+str(images_counter)+".png",scale=8)
 			else:
 				print("Unknown type")
@@ -53,7 +53,7 @@ def clean_images(images_counter, imagesFolder):
 def generate_video(image_type, video_file, imagesFolder):
 	images_counter = generate_frames(image_type)
 	create_file(video_file)
-	clean_images(images_counter, imagesFolder)
+	#clean_images(images_counter, imagesFolder)
 
 
 def main():
