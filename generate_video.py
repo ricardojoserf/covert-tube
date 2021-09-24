@@ -53,7 +53,7 @@ def clean_images(images_counter, imagesFolder):
 def generate_video(image_type, video_file, imagesFolder):
 	images_counter = generate_frames(image_type)
 	create_file(video_file)
-	#clean_images(images_counter, imagesFolder)
+	clean_images(images_counter, imagesFolder)
 
 
 def main():

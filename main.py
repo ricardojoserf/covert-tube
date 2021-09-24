@@ -33,13 +33,10 @@ def get_first_video_in_channel(api_key, channel_id):
 def download_video(video_url, downloaded_video_path):
 	now = datetime.datetime.now()
 	print("[%02d:%02d] Downloading video file to: %s"%(now.hour,now.minute,downloaded_video_path))
-	ydl_opts = {'outtmpl': downloaded_video_path}
+	ydl_opts = {'outtmpl': downloaded_video_path, 'quiet': 'any_printing'}
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 		ydl.download([video_url])
-	'''
-	os.system("wget "+video_url+" -O "+downloaded_video_path)
-	'''
-
+	
 
 def analyze(downloaded_video_path):
 	now = datetime.datetime.now()
@@ -49,7 +46,11 @@ def analyze(downloaded_video_path):
 
 
 def execute_commands(commands):
+	cmd_counter = 0
 	for cmd_ in commands:
+		cmd_counter += 1
+		now = datetime.datetime.now()
+		print("[%02d:%02d] Command %s - %s"%(now.hour,now.minute,str(cmd_counter),cmd_))
 		os.system(cmd_)
 
 
@@ -65,6 +66,9 @@ def wait_for_upload(original_video_url, api_key, channel_id, delay_seconds, down
 			download_video(video_url, downloaded_video_path)
 			time.sleep(5)
 			commands = analyze(downloaded_video_path)
+			if commands == "unknown_type":
+				print("[-] Error: Unknown type of video")
+				break
 			execute_commands(commands)
 			original_video_url = video_url
 		else:
