@@ -1,32 +1,35 @@
-# import the necessary packages
+from pyzbar.pyzbar import decode
 from PIL import Image
+from glob import glob
 import pytesseract
 import argparse
-import cv2
-import os
-import math
-from glob import glob
-import re
 import config
-from pyzbar.pyzbar import decode
-natsort = lambda s: [int(t) if t.isdigit() else t.lower() for t in re.split('(\d+)', s)]
+import math
+import cv2
+import re
+import os
+
 
 
 def get_frames(video_path, imagesFolder):
 	cap = cv2.VideoCapture(video_path)
 	frameRate = int(cap.get(cv2.CAP_PROP_FPS))
+	images_counter = 0
 	while(cap.isOpened()):
 		frameId = cap.get(1)
 		ret, frame = cap.read()
 		if (ret != True):
 			break
 		if (frameId % frameRate == 0):
-			filename = imagesFolder + "/image_" +  str(int(frameId+1)) + ".png"
+			images_counter += 1
+			filename = imagesFolder + "/image_" +  str(int(images_counter)) + ".png"
 			cv2.imwrite(filename, frame)
 	cap.release()
+	return images_counter
 
 
 def read_frames(image_type, imagesFolder):
+	natsort = lambda s: [int(t) if t.isdigit() else t.lower() for t in re.split('(\d+)', s)]
 	commands = []
 	for filename in sorted(glob(imagesFolder+'/*.png'), key=natsort):
 		if image_type == "cleartext":
@@ -50,14 +53,20 @@ def read_frames(image_type, imagesFolder):
 	return commands
 
 
+def clean_images(images_counter, imagesFolder):
+	for i in range(1, images_counter+1):
+		os.remove(imagesFolder + "/image_" +  str(int(i)) + ".png")
+
+
 def read_video(image_type, video_path, imagesFolder):
-	get_frames(video_path, imagesFolder)
+	images_counter = get_frames(video_path, imagesFolder)
 	commands = read_frames(image_type, imagesFolder)
+	clean_images(images_counter, imagesFolder)
 	return commands
 
 
 def main():
-	read_video(config.image_type, config.video_path, "/tmp/")
+	read_video(config.image_type, config.generated_video_path, config.temp_folder)
 
 
 if __name__== "__main__":

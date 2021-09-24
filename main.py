@@ -2,18 +2,15 @@ from __future__ import unicode_literals
 import sys
 sys.path.append("./dependencies")
 import read_funcs
+import youtube_dl
+import datetime
 import urllib
+import config
 import json
 import time
-import youtube_dl
+import math
+import cv2
 import os
-import cv2, math
-import config
-import datetime
-
-
-delay_seconds = config.upload_seconds_delay
-video_path = config.video_path
 
 
 def get_first_video_in_channel(api_key, channel_id):
@@ -35,18 +32,18 @@ def get_first_video_in_channel(api_key, channel_id):
 		return ""
 
 
-def download_video(video_url, video_path):
+def download_video(video_url, downloaded_video_path):
 	now = datetime.datetime.now()
-	print("[%02d:%02d] Downloading video file to: %s"%(now.hour,now.minute,video_path))
-	ydl_opts = {'outtmpl': video_path}
+	print("[%02d:%02d] Downloading video file to: %s"%(now.hour,now.minute,downloaded_video_path))
+	ydl_opts = {'outtmpl': downloaded_video_path}
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 		ydl.download([video_url])
 
 
-def analyze(video_path):
+def analyze(downloaded_video_path):
 	now = datetime.datetime.now()
-	print("[%02d:%02d] Analyzing video in: %s"%(now.hour,now.minute,video_path))
-	commands = read_funcs.read_video(config.image_type, video_path, "/tmp/")
+	print("[%02d:%02d] Analyzing video in: %s"%(now.hour,now.minute,downloaded_video_path))
+	commands = read_funcs.read_video(config.image_type, downloaded_video_path, "/tmp/")
 	return commands
 
 
@@ -55,19 +52,18 @@ def execute_commands(commands):
 		os.system(cmd_)
 
 
-def wait_for_upload(original_video_url, api_key, channel_id):
+def wait_for_upload(original_video_url, api_key, channel_id, delay_seconds, downloaded_video_path):
 	now = datetime.datetime.now()
 	print("[%02d:%02d] Waiting %s seconds..."%(now.hour,now.minute,delay_seconds))
 	while True:
 		time.sleep(delay_seconds)
 		video_url = get_first_video_in_channel(api_key, channel_id)
-		### if video_url == original_video_url:
 		if video_url != original_video_url:
 			now = datetime.datetime.now()
 			print("[%02d:%02d] New video uploaded!"% (now.hour,now.minute))
-			download_video(video_url, video_path)
+			download_video(video_url, downloaded_video_path)
 			time.sleep(5)
-			commands = analyze(video_path)
+			commands = analyze(downloaded_video_path)
 			execute_commands(commands)
 			original_video_url = video_url
 		else:
@@ -76,10 +72,12 @@ def wait_for_upload(original_video_url, api_key, channel_id):
 
 
 def main():
+	delay_seconds = config.upload_seconds_delay
+	downloaded_video_path = config.downloaded_video_path
 	channel_id = config.channel_id
 	api_key = config.api_key
 	original_video_url = get_first_video_in_channel(api_key, channel_id)
-	wait_for_upload(original_video_url, api_key, channel_id)
+	wait_for_upload(original_video_url, api_key, channel_id, delay_seconds, downloaded_video_path)
 
 
 main()
