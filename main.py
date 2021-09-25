@@ -1,6 +1,12 @@
 from __future__ import unicode_literals
+import os
 import sys
-sys.path.append("./dependencies")
+if os.name == "nt":
+		sys.path.append(".\\dependencies\\windows")
+		sys.path.append(".\\dependencies\\common")
+else:
+		sys.path.append("./dependencies/linux")
+		sys.path.append("./dependencies/common")
 import read_funcs
 import youtube_dl
 import datetime
@@ -8,7 +14,6 @@ import urllib
 import config
 import json
 import time
-import os
 
 
 def get_first_video_in_channel(api_key, channel_id):

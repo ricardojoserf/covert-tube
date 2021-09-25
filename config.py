@@ -1,6 +1,6 @@
 ######################################################
-channel_id = ""
-api_key =  ""
+#channel_id = ""
+#api_key =  ""
 ######################################################
 image_type = "qr"
 generated_video_path = "output.avi"
