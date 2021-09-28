@@ -1,12 +1,7 @@
 from __future__ import unicode_literals
 import os
 import sys
-if os.name == "nt":
-		sys.path.append(".\\dependencies\\windows")
-		sys.path.append(".\\dependencies\\common")
-else:
-		sys.path.append("./dependencies/linux")
-		sys.path.append("./dependencies/common")
+sys.path.append("dependencies")
 import read_funcs
 import youtube_dl
 import datetime
@@ -27,17 +22,17 @@ def get_first_video_in_channel(api_key, channel_id):
 		video_id = resp['items'][0]['id']['videoId']
 		video_url = base_video_url + video_id
 		now = datetime.datetime.now()
-		print("[%02d:%02d] Last video title: %s" % (now.hour,now.minute,title))
-		print("[%02d:%02d] Last video url:   %s" % (now.hour,now.minute,video_url))
+		print("[%02d:%02d:%02d] Last video title: %s" % (now.hour,now.minute,now.second,title))
+		print("[%02d:%02d:%02d] Last video url:   %s" % (now.hour,now.minute,now.second,video_url))
 		return video_url
 	else:
-		print("[%02d:%02d] No videos uploaded yet" % (now.hour,now.minute))
+		print("[%02d:%02d:%02d] No videos uploaded yet" % (now.hour,now.minute))
 		return ""
 
 
 def download_video(video_url, downloaded_video_path):
 	now = datetime.datetime.now()
-	print("[%02d:%02d] Downloading video file to: %s"%(now.hour,now.minute,downloaded_video_path))
+	print("[%02d:%02d:%02d] Downloading video file to: %s"%(now.hour,now.minute,now.second,downloaded_video_path))
 	ydl_opts = {'outtmpl': downloaded_video_path, 'quiet': 'any_printing'}
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 		ydl.download([video_url])
@@ -45,7 +40,7 @@ def download_video(video_url, downloaded_video_path):
 
 def analyze(downloaded_video_path):
 	now = datetime.datetime.now()
-	print("[%02d:%02d] Analyzing video in: %s"%(now.hour,now.minute,downloaded_video_path))
+	print("[%02d:%02d:%02d] Analyzing video in: %s"%(now.hour,now.minute,now.second,downloaded_video_path))
 	commands = read_funcs.read_video(config.image_type, downloaded_video_path, "/tmp/")
 	return commands
 
@@ -55,19 +50,19 @@ def execute_commands(commands):
 	for cmd_ in commands:
 		cmd_counter += 1
 		now = datetime.datetime.now()
-		print("[%02d:%02d] Command %s - %s"%(now.hour,now.minute,str(cmd_counter),cmd_))
+		print("[%02d:%02d:%02d] Command %s - %s"%(now.hour,now.minute,now.second,str(cmd_counter),cmd_))
 		os.system(cmd_)
 
 
 def wait_for_upload(original_video_url, api_key, channel_id, delay_seconds, downloaded_video_path):
 	now = datetime.datetime.now()
-	print("[%02d:%02d] Waiting %s seconds..."%(now.hour,now.minute,delay_seconds))
+	print("[%02d:%02d:%02d] Waiting %s seconds..."%(now.hour,now.minute,now.second,delay_seconds))
 	while True:
 		time.sleep(delay_seconds)
 		video_url = get_first_video_in_channel(api_key, channel_id)
 		if video_url != original_video_url:
 			now = datetime.datetime.now()
-			print("[%02d:%02d] New video uploaded!"% (now.hour,now.minute))
+			print("[%02d:%02d:%02d] New video uploaded!"% (now.hour,now.minute))
 			download_video(video_url, downloaded_video_path)
 			time.sleep(5)
 			commands = analyze(downloaded_video_path)
@@ -78,7 +73,7 @@ def wait_for_upload(original_video_url, api_key, channel_id, delay_seconds, down
 			original_video_url = video_url
 		else:
 			now = datetime.datetime.now()
-			print("[%02d:%02d] No new video uploaded. Waiting %s seconds..."%(now.hour,now.minute,delay_seconds))
+			print("[%02d:%02d:%02d] No new video uploaded. Waiting %s seconds..."%(now.hour,now.minute,now.second,delay_seconds))
 
 
 def main():
@@ -90,4 +85,5 @@ def main():
 	wait_for_upload(original_video_url, api_key, channel_id, delay_seconds, downloaded_video_path)
 
 
-main()
+if __name__== "__main__":
+	main()

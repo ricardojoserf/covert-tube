@@ -11,7 +11,7 @@ import os
 def generate_frames(image_type):
 	images_counter = 0
 	while True:
-		cmd_ = input("Enter command or 'exit' to generate video: ")
+		cmd_ = input("Enter a command or 'exit' to generate video: ")
 		images_counter += 1
 		if cmd_ != "exit":
 			if image_type == "cleartext":

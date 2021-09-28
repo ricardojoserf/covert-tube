@@ -37,11 +37,6 @@ def read_frames(image_type, imagesFolder):
 			text = pytesseract.image_to_string(Image.open(test_file))
 		elif image_type == "qr":
 			text = decode(Image.open(filename))[0].data.decode()
-		elif image_type == "qr_red":
-			image = cv2.imread(filename)
-			r = image.copy()
-			r[:, :, 0] = 0
-			r[:, :, 1] = 0
 		else:
 			print("[-] Error: Unknown type")
 			return "unknown_type"
