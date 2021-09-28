@@ -49,7 +49,7 @@ def clean_images(images_counter, imagesFolder):
 		os.remove(imagesFolder + "/image_" +  str(int(i)) + ".png")
 
 
-def read_video(image_type, video_path, imagesFolder):
+def read_vid(image_type, video_path, imagesFolder):
 	images_counter = get_frames(video_path, imagesFolder)
 	commands = read_frames(image_type, imagesFolder)
 	clean_images(images_counter, imagesFolder)
@@ -57,7 +57,7 @@ def read_video(image_type, video_path, imagesFolder):
 
 
 def main():
-	read_video(config.image_type, config.generated_video_path, config.temp_folder)
+	read_vid(config.image_type, config.generated_video_path, config.temp_folder)
 
 
 if __name__== "__main__":

@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 import os
 import sys
 sys.path.append("dependencies")
-import read_funcs
+import read_video
 import youtube_dl
 import datetime
 import urllib
@@ -41,7 +41,7 @@ def download_video(video_url, downloaded_video_path):
 def analyze(downloaded_video_path):
 	now = datetime.datetime.now()
 	print("[%02d:%02d:%02d] Analyzing video in: %s"%(now.hour,now.minute,now.second,downloaded_video_path))
-	commands = read_funcs.read_video(config.image_type, downloaded_video_path, "/tmp/")
+	commands = read_video.read_vid(config.image_type, downloaded_video_path, "/tmp/")
 	return commands
 
 
