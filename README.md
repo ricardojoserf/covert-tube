@@ -36,11 +36,11 @@ We can see the output from the commands:
 
 Update the *config.py* file:
 
-- **channel_id** (Mandatory!!!): Get your Youtube Channel Id from [here](https://www.youtube.com/account_advanced).
+- **channel_id** (Mandatory!!!): Get your Youtube channel ID from [here](https://www.youtube.com/account_advanced).
 
-- **api_key** (Mandatory!!!): To get the API key create an application and generate an API key from [here](https://console.cloud.google.com/apis/credentials).
+- **api_key** (Mandatory!!!): To get the API key create an application and generate the key from [here](https://console.cloud.google.com/apis/credentials).
 
-- **image_type** (Optional. Default: "qr"): Different types of images for the video. 
+- **image_type** (Optional. Default: "qr_aes"): Different types of images for the video. 
 	- "cleartext" creates images with the words of the commands.
 	- "qr" creates QR codes with the commands.
 	- "qr_aes" creates QR codes with the commands encrypted with AES.
@@ -84,10 +84,7 @@ For only the QR with AES encryption option:
 pip3 install Pillow opencv-python youtube_dl pyqrcode pypng pyzbar pycrypto
 ```
 
-## Create a binary
-
-
-Compile the binary and clean files:
+## Creating a standalone binary
 
 ```
 pyinstaller --onefile main.py
@@ -103,8 +100,6 @@ rm main.spec
 
 Lately I have been reading about malware using Youtube for controlling their setting remotely. 
 
-For example, Casbaneiro started to abuse YouTube to store its C&C server domains. Each video on the channels used by the thread actor contains a description and at the end of these there is a link to a bogus Facebook or Instagram url containing the C&C server domain ([Welivesecurity blog](https://www.welivesecurity.com/2019/10/03/casbaneiro-trojan-dangerous-cooking/)). 
+For example, Casbaneiro started to abuse YouTube to store its C&C server domains. Each video on the channels used by the thread actor contains a description and at the end of these there is a link to a bogus Facebook or Instagram url containing the C&C server domain ([Welivesecurity blog](https://www.welivesecurity.com/2019/10/03/casbaneiro-trojan-dangerous-cooking/)).  A second example is Numando, which abuses it by encrypting the data in the title of the Youtube videos ([other Welivesecurity blog](https://www.welivesecurity.com/2021/09/17/numando-latam-banking-trojan/)). 
 
-A second example is Numando, which abuses it by encrypting the data in the title of the Youtube videos ([Welivesecurity blog](https://www.welivesecurity.com/2021/09/17/numando-latam-banking-trojan/)).
-
-Knowing this I decided to create a PoC to test the control of remote systems uploading videos to Youtube but, instead of using the title or the description, using the content of the video. It allows to execute any command, but it could be used to change some settings. 
+Knowing this I decided to create a PoC to test the control of remote systems uploading videos to Youtube but, instead of using the title or the description, using the content of the video. It allows to execute any command, but it could be used to change some settings remotely. 
