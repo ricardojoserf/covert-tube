@@ -10,7 +10,7 @@ The videos can be created using *generate_video.py*: enter the commands and gene
 python3 generate_video.py
 ```
 
-![img1](images/image1.png)
+![img1](https://raw.githubusercontent.com/ricardojoserf/ricardojoserf.github.io/master/images/covert-tube/image1.png)
 
 
 ### Run the listener and upload the video to Youtube
@@ -19,24 +19,37 @@ python3 generate_video.py
 python3 main.py
 ```
 
-The listener will check the Youtube channel every 300 seconds by default (can be updated in *config.py*). After finding there is a new video in the channel, the video is downloaded and the commands are executed:
+The listener will check the Youtube channel every 300 seconds by default (can be updated in *config.py*). First the video is uploaded:
 
-![img2](images/image2.png)
+![img2](https://raw.githubusercontent.com/ricardojoserf/ricardojoserf.github.io/master/images/covert-tube/image2.png)
 
-![img3](images/image3.png)
+After finding there is [a new video in the channel](https://www.youtube.com/watch?v=ZPQ4drX35bU), it is downloaded and the commands are executed:
+
+![img3](https://raw.githubusercontent.com/ricardojoserf/ricardojoserf.github.io/master/images/covert-tube/image3.png)
+
+We can see the output from the commands:
+
+![img4](https://raw.githubusercontent.com/ricardojoserf/ricardojoserf.github.io/master/images/covert-tube/image4.png)
 
 
 ### Configuration
 
 Update the *config.py* file:
 
-- **channel_id** (Mandatory!!!): Get your Youtube Channel Id from [https://www.youtube.com/account_advanced](https://www.youtube.com/account_advanced).
+- **channel_id** (Mandatory!!!): Get your Youtube Channel Id from [here](https://www.youtube.com/account_advanced).
 
-- **api_key** (Mandatory!!!): To get the API key create an application ([https://console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)) and generate an API key ([https://console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)).
+- **api_key** (Mandatory!!!): To get the API key create an application and generate an API key from [here](https://console.cloud.google.com/apis/credentials).
 
-- **image_type** (Optional. Default: "qr"): Different types of images for the video. "cleartext" creates images with the words of the commands, "qr" creates QR codes.
+- **image_type** (Optional. Default: "qr"): Different types of images for the video. 
+	- "cleartext" creates images with the words of the commands.
+	- "qr" creates QR codes with the commands.
+	- "qr_aes" creates QR codes with the commands encrypted with AES.
 
 - **upload_seconds_delay** (Optional. Default: 300): Seconds delay until checking if a new video has been uploaded.
+
+- **debug** (Optional. Default: True): Print messages or not.
+
+- **aes_key** (Optional. Default: "covert-tube_2021"): Key for AES encryption, used in the "qr_aes" option.
 
 - **generated_video_path** (Optional. Default: "output.avi"): Path of video generated with *generate_video.py*.
 
@@ -44,8 +57,32 @@ Update the *config.py* file:
 
 - **temp_folder** (Optional. Default: "/tmp/"): Path where images of every frame from the video are stored, with the format *image_*X*.png*.
 
-
 --------------------------------------------------------------------------------------
+
+## Dependencies
+
+For all the project:
+
+```
+pip3 install Pillow opencv-python youtube_dl pytesseract pyqrcode pypng pyzbar pycrypto
+```
+For only the "cleartext" option (OCR):
+
+```
+pip3 install Pillow opencv-python youtube_dl pytesseract
+```
+
+For only the QR without encryption option:
+
+```
+pip3 install Pillow opencv-python youtube_dl pyqrcode pypng pyzbar
+```
+
+For only the QR with AES encryption option:
+
+```
+pip3 install Pillow opencv-python youtube_dl pyqrcode pypng pyzbar pycrypto
+```
 
 ## Create a binary
 
@@ -54,7 +91,7 @@ Compile the binary and clean files:
 
 ```
 pyinstaller --onefile main.py
-cp dist/main c2tube
+cp dist/main covert-tube
 rm -rf dist build
 rm main.spec
 ```

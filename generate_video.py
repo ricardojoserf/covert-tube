@@ -1,11 +1,20 @@
-from PIL import Image, ImageDraw, ImageFont
 from glob import glob
-import pyqrcode
 import config
-import numpy
 import cv2
 import re
 import os
+
+
+def aes_encrypt(message, aes_key):
+	import base64
+	from Crypto.Cipher import AES
+	message = message.encode()
+	BS = 16
+	pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS).encode()
+	raw = pad(message)
+	cipher = AES.new(aes_key, AES.MODE_CBC, chr(0) * 16) # yes, IV is all zeros xD
+	enc = cipher.encrypt(raw)
+	return base64.b64encode(enc).decode('utf-8')
 
 
 def generate_frames(image_type):
@@ -15,37 +24,21 @@ def generate_frames(image_type):
 		images_counter += 1
 		if cmd_ != "exit":
 			if image_type == "cleartext":
+				from PIL import Image, ImageDraw, ImageFont
 				img = Image.new('RGB', (200, 200), color=(255,255,255))
 				canvas = ImageDraw.Draw(img)
 				font = ImageFont.truetype('Lato-Bold.ttf', size=30)
 				canvas.text((16, 16), cmd_, font=font, fill='#000000')
 				img.save(config.temp_folder+"image_"+str(images_counter)+".png")
 			elif image_type == "qr":
+				import pyqrcode
 				qrcode = pyqrcode.create(cmd_,version=10)
 				qrcode.png(config.temp_folder+"image_"+str(images_counter)+".png",scale=8)
-			'''
-			elif image_type == "stego":
-				img = numpy.zeros((16,16,3), numpy.uint8)
-				cmd_ += "====="
-				data_index = 0
-				binary_secret_data = ''.join([ format(ord(i), "08b") for i in cmd_ ])
-				data_len = len(binary_secret_data)
-				for row in img:
-					for pixel in row:
-						r, g, b = [ format(i, "08b") for i in pixel ]
-						if data_index < data_len:
-							pixel[0] = int(r[:-1] + binary_secret_data[data_index], 2)
-							data_index += 1
-						if data_index < data_len:
-							pixel[1] = int(g[:-1] + binary_secret_data[data_index], 2)
-							data_index += 1
-						if data_index < data_len:
-							pixel[2] = int(b[:-1] + binary_secret_data[data_index], 2)
-							data_index += 1
-						if data_index >= data_len:
-							break
-				cv2.imwrite(config.temp_folder+"image_"+str(images_counter)+".png", img)
-			'''
+			elif image_type == "qr_aes":
+				import pyqrcode
+				encrypted_cmd = aes_encrypt(cmd_,config.aes_key)
+				qrcode = pyqrcode.create(encrypted_cmd,version=10)
+				qrcode.png(config.temp_folder+"image_"+str(images_counter)+".png",scale=8)			
 			else:
 				print("Unknown type")
 		else:

