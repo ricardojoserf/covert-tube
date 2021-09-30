@@ -1,6 +1,6 @@
-# c2tube
+# covert-tube
 
-Execute commands in a system remotely by uploading videos to Youtube.
+Control systems remotely and execute commands by uploading videos to Youtube.
 
 ### Create a video
 
@@ -58,3 +58,16 @@ cp dist/main c2tube
 rm -rf dist build
 rm main.spec
 ```
+
+--------------------------------------------------------------------------------------
+
+
+## Motivation
+
+Lately I have been reading about malware using Youtube for controlling their setting remotely. 
+
+For example, Casbaneiro started to abuse YouTube to store its C&C server domains. Each video on the channels used by the thread actor contains a description and at the end of these there is a link to a bogus Facebook or Instagram url containing the C&C server domain ([Welivesecurity blog](https://www.welivesecurity.com/2019/10/03/casbaneiro-trojan-dangerous-cooking/)). 
+
+A second example is Numando, which abuses it by encrypting the data in the title of the Youtube videos ([Welivesecurity blog](https://www.welivesecurity.com/2021/09/17/numando-latam-banking-trojan/)).
+
+Knowing this I decided to create a PoC to test the control of remote systems uploading videos to Youtube but, instead of using the title or the description, using the content of the video. It allows to execute any command, but it could be used to change some settings. 
