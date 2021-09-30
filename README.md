@@ -2,8 +2,6 @@
 
 A program to control systems remotely by uploading videos to Youtube using Python to create the videos and the listener, emulating some malware I was reading about. It allows to create videos with frames formed of simple text, QR codes with cleartext or QR codes using AES encryption. 
 
-## Usage
-
 ### Create a video
 
 The videos can be created using *generate_video.py*: enter the commands and generate the video writing "exit". The video generated is called by default *output.avi* (can be updated in *config.py*): 
@@ -34,8 +32,6 @@ We can see the output from the commands:
 ![img4](https://raw.githubusercontent.com/ricardojoserf/ricardojoserf.github.io/master/images/covert-tube/image4.png)
 
 --------------------------------------------------------------------------------------
-
-## Installation
 
 ### Configuration
 
