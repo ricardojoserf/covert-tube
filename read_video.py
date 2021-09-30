@@ -1,7 +1,5 @@
-from pyzbar.pyzbar import decode
 from PIL import Image
 from glob import glob
-import pytesseract
 import config
 import cv2
 import re
@@ -20,6 +18,8 @@ def get_frames(video_path, imagesFolder):
 		if (frameId % frameRate == 0):
 			images_counter += 1
 			filename = imagesFolder + "/image_" +  str(int(images_counter)) + ".png"
+			height, width, layers = frame.shape
+			size = (width,height)
 			cv2.imwrite(filename, frame)
 	cap.release()
 	return images_counter
@@ -30,16 +30,35 @@ def read_frames(image_type, imagesFolder):
 	commands = []
 	for filename in sorted(glob(imagesFolder+'/*.png'), key=natsort):
 		if image_type == "cleartext":
+			import pytesseract
 			image = cv2.imread(filename)
 			gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-			test_file = "/tmp/filename.png"
-			cv2.imwrite(test_file, gray)
-			text = pytesseract.image_to_string(Image.open(test_file))
+			text = pytesseract.image_to_string(gray)
 		elif image_type == "qr":
+			from pyzbar.pyzbar import decode
 			text = decode(Image.open(filename))[0].data.decode()
+		'''
+		elif image_type == "stego":
+			image = cv2.imread(filename)
+			binary_data = ""
+			for row in image:
+				for pixel in row:
+					r, g, b = [ format(i, "08b") for i in pixel ]
+					binary_data += r[-1]
+					binary_data += g[-1]
+					binary_data += b[-1]
+			all_bytes = [ binary_data[i: i+8] for i in range(0, len(binary_data), 8) ]
+			decoded_data = ""
+			for byte in all_bytes:
+				decoded_data += chr(int(byte, 2))
+				if decoded_data[-5:] == "=====":
+					break
+			text = decoded_data[:-5]
+		'''
 		else:
 			print("[-] Error: Unknown type")
 			return "unknown_type"
+		print(text)
 		commands.append(text)
 	return commands
 

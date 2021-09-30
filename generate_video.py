@@ -1,8 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
 from glob import glob
-import numpy as np
 import pyqrcode
 import config
+import numpy
 import cv2
 import re
 import os
@@ -23,6 +23,29 @@ def generate_frames(image_type):
 			elif image_type == "qr":
 				qrcode = pyqrcode.create(cmd_,version=10)
 				qrcode.png(config.temp_folder+"image_"+str(images_counter)+".png",scale=8)
+			'''
+			elif image_type == "stego":
+				img = numpy.zeros((16,16,3), numpy.uint8)
+				cmd_ += "====="
+				data_index = 0
+				binary_secret_data = ''.join([ format(ord(i), "08b") for i in cmd_ ])
+				data_len = len(binary_secret_data)
+				for row in img:
+					for pixel in row:
+						r, g, b = [ format(i, "08b") for i in pixel ]
+						if data_index < data_len:
+							pixel[0] = int(r[:-1] + binary_secret_data[data_index], 2)
+							data_index += 1
+						if data_index < data_len:
+							pixel[1] = int(g[:-1] + binary_secret_data[data_index], 2)
+							data_index += 1
+						if data_index < data_len:
+							pixel[2] = int(b[:-1] + binary_secret_data[data_index], 2)
+							data_index += 1
+						if data_index >= data_len:
+							break
+				cv2.imwrite(config.temp_folder+"image_"+str(images_counter)+".png", img)
+			'''
 			else:
 				print("Unknown type")
 		else:

@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import os
 import sys
-sys.path.append("dependencies")
+#sys.path.append("dependencies")
 import read_video
 import youtube_dl
 import datetime
