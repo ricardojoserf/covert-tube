@@ -37,11 +37,6 @@ We can see the output from the commands:
 
 ## Installation
 
-```
-git clone https://github.com/ricardojoserf/covert-tube
-cd covert-tube
-```
-
 ### Configuration
 
 Update the *config.py* file:
