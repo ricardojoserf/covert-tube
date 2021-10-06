@@ -58,29 +58,14 @@ Update the *config.py* file:
 
 - **temp_folder** (Optional. Default: "/tmp/"): Path where images of every frame from the video are stored, with the format *image_*X*.png*.
 
-### Installing dependencies
+### Installation
 
 For all the project:
 
 ```
+sudo apt install libzbar0
 pip3 install Pillow opencv-python youtube_dl pytesseract pyqrcode pypng pyzbar pycrypto
-```
-For only the "cleartext" option (OCR):
-
-```
-pip3 install Pillow opencv-python youtube_dl pytesseract
-```
-
-For only the QR without encryption option:
-
-```
-pip3 install Pillow opencv-python youtube_dl pyqrcode pypng pyzbar
-```
-
-For only the QR with AES encryption option:
-
-```
-pip3 install Pillow opencv-python youtube_dl pyqrcode pypng pyzbar pycrypto
+git clone https://github.com/ricardojoserf/covert-tube
 ```
 
 ### Creating a standalone binary
