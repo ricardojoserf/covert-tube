@@ -2,6 +2,8 @@
 
 A program to control systems remotely by uploading videos to Youtube using Python to create the videos and the listener, emulating some malware I was reading about. It allows to create videos with frames formed of simple text, QR codes with cleartext or QR codes using AES encryption. 
 
+NOTE: This PoC has been added to the framework [covert-control](https://github.com/ricardojoserf/covert-control), which allows to do this also using Onedrive, Google Drive and Telegram.
+
 ### Create a video
 
 The videos can be created using *generate_video.py*: enter the commands and generate the video writing "exit". The video generated is called by default *output.avi* (can be updated in *config.py*): 
