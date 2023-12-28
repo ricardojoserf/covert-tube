@@ -4,6 +4,10 @@ A program to control systems remotely by uploading videos to Youtube using Pytho
 
 NOTE: This PoC has been added to the framework [covert-control](https://github.com/ricardojoserf/covert-control), which allows to do this also using Onedrive, Google Drive and Telegram.
 
+If your target is a Windows system, you may prefer the C# version: [SharpCovertTube](https://github.com/ricardojoserf/SharpCovertTube) (I have updated it more recently).
+
+------------------------------
+
 ### Create a video
 
 The videos can be created using *generate_video.py*: enter the commands and generate the video writing "exit". The video generated is called by default *output.avi* (can be updated in *config.py*): 
